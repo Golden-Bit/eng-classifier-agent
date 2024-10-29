@@ -1,0 +1,11 @@
+fastapi
+streamlit
+requests
+langchain_openai
+langchain-openai
+pydantic
+pymupdf4llm
+langchain_core
+langchain
+pymongo
+jsonschema

@@ -1,0 +1,246 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Schema Dettagliato del Dato JSON Fornito"
+description: "Questo schema definisce in dettaglio la struttura del dato JSON fornito, includendo tutte le proprietà possibili e utilizzando riferimenti a schemi per gestire strutture annidate."
+type: "object"
+properties:
+  Item:
+    $ref: "#/definitions/Item"
+  BOM:
+    $ref: "#/definitions/BOMComponent"
+  Forms:
+    type: "array"
+    description: "Elenco dei moduli (Forms) associati all'articolo."
+    items:
+      $ref: "#/definitions/Form"
+  WhereUsed:
+    type: "array"
+    description: "Elenco degli articoli in cui questo articolo è utilizzato."
+    items:
+      $ref: "#/definitions/Item"
+  Documents:
+    type: "array"
+    description: "Elenco dei documenti associati all'articolo."
+    items:
+      $ref: "#/definitions/Document"
+required:
+  - Item
+  - BOM
+  - Forms
+  - WhereUsed
+  - Documents
+
+definitions:
+  Item:
+    type: "object"
+    description: "Rappresenta un articolo con le sue proprietà e attributi specifici."
+    properties:
+      Id:
+        type: "string"
+        description: "Identificatore univoco dell'articolo nel sistema."
+      ItemId:
+        type: "string"
+        description: "Codice identificativo dell'articolo."
+      Name:
+        type: "string"
+        description: "Nome descrittivo dell'articolo."
+      Description:
+        type: ["string", "null"]
+        description: "Descrizione dettagliata dell'articolo."
+      Revision:
+        type: "string"
+        description: "Numero di revisione corrente dell'articolo."
+      ObjectType:
+        type: "string"
+        description: "Tipo di oggetto, che indica la categoria o il ruolo dell'articolo."
+      Attributes:
+        type: "array"
+        description: "Elenco degli attributi personalizzati associati all'articolo."
+        items:
+          $ref: "#/definitions/Attribute"
+      CreatedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora di creazione dell'articolo nel sistema."
+      LastModifiedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora dell'ultima modifica apportata all'articolo."
+      Status:
+        type: ["string", "null"]
+        description: "Stato corrente dell'articolo (es. attivo, obsoleto)."
+    required:
+      - Id
+      - ItemId
+      - Name
+      - Revision
+      - ObjectType
+      - Attributes
+      - CreatedDate
+      - LastModifiedDate
+
+  Attribute:
+    type: "object"
+    description: "Definisce un attributo personalizzato di un articolo, includendo nome interno, nome visualizzato, tipo e valore."
+    properties:
+      InternalName:
+        type: "string"
+        description: "Nome interno utilizzato dal sistema per identificare l'attributo."
+      DisplayName:
+        type: "string"
+        description: "Nome visualizzato dell'attributo, utilizzato nelle interfacce utente."
+      AttributeType:
+        type: "string"
+        description: "Tipo di dato dell'attributo (es. String, Boolean, Date)."
+      Value:
+        type: ["string", "null"]
+        description: "Valore assegnato all'attributo."
+    required:
+      - InternalName
+      - DisplayName
+      - AttributeType
+
+  BOMComponent:
+    type: "object"
+    description: "Rappresenta un componente nella Distinta Base (Bill of Materials), includendo informazioni sul componente stesso e sui suoi componenti figli."
+    properties:
+      Id:
+        type: ["string", "null"]
+        description: "Identificatore univoco del componente nella BOM."
+      Quantity:
+        type: "number"
+        description: "Quantità necessaria di questo componente."
+      Component:
+        $ref: "#/definitions/Item"
+      ChildComponents:
+        type: "array"
+        description: "Elenco dei componenti figli, permettendo la costruzione di una struttura gerarchica della BOM."
+        items:
+          $ref: "#/definitions/BOMComponent"
+      Level:
+        type: ["integer", "null"]
+        description: "Livello di profondità del componente nella struttura della BOM."
+      MaxDepth:
+        type: ["integer", "null"]
+        description: "Profondità massima raggiunta dai componenti figli nella gerarchia."
+    required:
+      - Quantity
+      - Component
+      - ChildComponents
+
+  Form:
+    type: "object"
+    description: "Rappresenta un modulo associato all'articolo, contenente informazioni aggiuntive come attributi specifici."
+    properties:
+      Id:
+        type: "string"
+        description: "Identificatore univoco del modulo."
+      ItemId:
+        type: ["string", "null"]
+        description: "Codice identificativo dell'articolo associato al modulo."
+      Name:
+        type: "string"
+        description: "Nome del modulo."
+      Description:
+        type: ["string", "null"]
+        description: "Descrizione dettagliata del modulo."
+      Revision:
+        type: ["string", "null"]
+        description: "Numero di revisione corrente del modulo."
+      ObjectType:
+        type: "string"
+        description: "Tipo di oggetto del modulo, indicando la sua categoria o funzione."
+      Attributes:
+        type: "array"
+        description: "Elenco degli attributi personalizzati associati al modulo."
+        items:
+          $ref: "#/definitions/Attribute"
+      CreatedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora di creazione del modulo."
+      LastModifiedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora dell'ultima modifica apportata al modulo."
+      Status:
+        type: ["string", "null"]
+        description: "Stato corrente del modulo."
+    required:
+      - Id
+      - Name
+      - ObjectType
+      - Attributes
+      - CreatedDate
+      - LastModifiedDate
+
+  Document:
+    type: "object"
+    description: "Rappresenta un documento associato all'articolo, includendo file associati."
+    properties:
+      Id:
+        type: ["string", "null"]
+        description: "Identificatore univoco del documento."
+      Name:
+        type: "string"
+        description: "Nome del documento."
+      Description:
+        type: ["string", "null"]
+        description: "Descrizione del contenuto del documento."
+      Revision:
+        type: ["string", "null"]
+        description: "Numero di revisione corrente del documento."
+      ObjectType:
+        type: "string"
+        description: "Tipo di oggetto del documento."
+      Attributes:
+        type: "array"
+        description: "Elenco degli attributi personalizzati associati al documento."
+        items:
+          $ref: "#/definitions/Attribute"
+      CreatedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora di creazione del documento."
+      LastModifiedDate:
+        type: "string"
+        format: "date-time"
+        description: "Data e ora dell'ultima modifica apportata al documento."
+      Status:
+        type: ["string", "null"]
+        description: "Stato corrente del documento."
+      AssociatedFiles:
+        type: "array"
+        description: "Elenco di file associati al documento."
+        items:
+          $ref: "#/definitions/AssociatedFile"
+    required:
+      - Name
+      - ObjectType
+      - Attributes
+      - CreatedDate
+      - LastModifiedDate
+
+  AssociatedFile:
+    type: "object"
+    description: "Rappresenta un file associato a un documento."
+    properties:
+      Id:
+        type: "string"
+        description: "Identificatore univoco del file associato."
+      Name:
+        type: "string"
+        description: "Nome del file associato, comprensivo di estensione."
+      Type:
+        type: "string"
+        description: "Tipo di file (es. PDF, DOC)."
+      Size:
+        type: "string"
+        description: "Dimensione del file, con unità di misura (es. '354 Kb')."
+      ContentBase64:
+        type: "string"
+        description: "Contenuto del file codificato in Base64."
+    required:
+      - Id
+      - Name
+      - Type
+      - Size

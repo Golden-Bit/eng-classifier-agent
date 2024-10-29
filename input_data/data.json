@@ -1,0 +1,589 @@
+{
+  "Item": {
+    "Id": "SquRrOW1hnO_QC",
+    "ItemId": "SC4004AF002",
+    "Name": "BLADE ROW 4 COMPLETE",
+    "Description": null,
+    "Revision": "1.0",
+    "ObjectType": "AENMBOMPRevision",
+    "Attributes": [
+      {
+        "InternalName": "aen4AlternativeRouting",
+        "DisplayName": "Routing Alternative",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4HasDocumentation",
+        "DisplayName": "Has Documentation?",
+        "AttributeType": "Boolean",
+        "Value": "True"
+      },
+      {
+        "InternalName": "aen4InheritedCheckedBy",
+        "DisplayName": "Inherited Checked By",
+        "AttributeType": "String",
+        "Value": "PIP01065-Parti per Assemblaggi"
+      },
+      {
+        "InternalName": "aen4InheritedDocumentedBy",
+        "DisplayName": "Inherited Documented By",
+        "AttributeType": "String",
+        "Value": "AD00160177|ENGLISH/01-BLADE ROW 4 COMPLETE,HTMA 80070|RPDM|ENGLISH/AB-INSTALLATION SCHEMATIC"
+      },
+      {
+        "InternalName": "aen4InheritedMadeOf",
+        "DisplayName": "Inherited Made Of",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4InheritedNominalChar",
+        "DisplayName": "Inherited Nominal Char",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4InheritedNormedBy",
+        "DisplayName": "Inherited Normed By",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4InheritedPreciseDocsIDs",
+        "DisplayName": "Inherited Precise Docs IDs",
+        "AttributeType": "String",
+        "Value": "RahRJrcyhnO_QC@DOCS,h3btX7XEhnO_QC@QUAL,wntJbykdhnO_QC@DOCS"
+      },
+      {
+        "InternalName": "aen4InheritedQualDocuments",
+        "DisplayName": "Inherited Quality Documents",
+        "AttributeType": "String",
+        "Value": "PIP01065_DOC|ITALIAN/..-Parti per Assemblaggi"
+      },
+      {
+        "InternalName": "aen4InheritsFamilyObjects",
+        "DisplayName": "Inherits Objects",
+        "AttributeType": "Boolean",
+        "Value": "True"
+      },
+      {
+        "InternalName": "AEN4ITM_POST",
+        "DisplayName": "POST",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "AEN4ITM_PRE",
+        "DisplayName": "PRE",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4ManagementType",
+        "DisplayName": "Management Type",
+        "AttributeType": "String",
+        "Value": ""
+      },
+      {
+        "InternalName": "aen4MissingFileString",
+        "DisplayName": "Missing File String",
+        "AttributeType": "String",
+        "Value": "False"
+      },
+      {
+        "InternalName": "aen4NotMnfgString",
+        "DisplayName": "Not Mnfg String",
+        "AttributeType": "String",
+        "Value": "False"
+      },
+      {
+        "InternalName": "aen4ObsolescenceDate",
+        "DisplayName": "Obsolescence Date",
+        "AttributeType": "Date",
+        "Value": ""
+      },
+      {
+        "InternalName": "aen4PlanningRouting",
+        "DisplayName": "Routing Planning",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4PreferredRouting",
+        "DisplayName": "Routing Optimal",
+        "AttributeType": "String",
+        "Value": "M0029085/13-Prel Vers cerchiate compr turb-SC4003AF004"
+      },
+      {
+        "InternalName": "aen4QAGCategory",
+        "DisplayName": "QAG Category",
+        "AttributeType": "String",
+        "Value": ""
+      },
+      {
+        "InternalName": "aen4ReadyForDigitalComp",
+        "DisplayName": "Ready For Digital Compilation",
+        "AttributeType": "String",
+        "Value": ""
+      },
+      {
+        "InternalName": "aen4ReplacedBy",
+        "DisplayName": "Replaced By",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4Replaces",
+        "DisplayName": "Replaces",
+        "AttributeType": "String",
+        "Value": null
+      },
+      {
+        "InternalName": "aen4SolutionOf",
+        "DisplayName": "Solution Of",
+        "AttributeType": "String",
+        "Value": "MCR059881-ECR047356"
+      },
+      {
+        "InternalName": "aen4UsageType",
+        "DisplayName": "Usage Type",
+        "AttributeType": "String",
+        "Value": ""
+      },
+      {
+        "InternalName": "aen4WFRestartTo",
+        "DisplayName": "Workflow Restart on Import To",
+        "AttributeType": "String",
+        "Value": ""
+      }
+    ],
+    "CreatedDate": "2023-07-21T07:45:59",
+    "LastModifiedDate": "2023-12-21T13:53:50",
+    "Status": null
+  },
+  "BOM": {
+    "Id": null,
+    "Quantity": -2.0,
+    "Component": {
+      "Id": "SquRrOW1hnO_QC",
+      "ItemId": "SC4004AF002",
+      "Name": "BLADE ROW 4 COMPLETE",
+      "Description": null,
+      "Revision": "1.0",
+      "ObjectType": "AENMBOMPRevision",
+      "Attributes": [],
+      "CreatedDate": "2023-07-21T07:45:59",
+      "LastModifiedDate": "2023-12-21T13:53:50",
+      "Status": null
+    },
+    "ChildComponents": [
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "R9kRztejhnO_QC",
+          "ItemId": "SC4304AF002",
+          "Name": "BLADE ROW 4 MACHINED REWORK",
+          "Description": null,
+          "Revision": "0.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2023-04-13T08:38:53",
+          "LastModifiedDate": "2023-04-20T15:17:16",
+          "Status": null
+        },
+        "ChildComponents": [
+          {
+            "Id": null,
+            "Quantity": 1.0,
+            "Component": {
+              "Id": "BvTl9hpwhnO_QC",
+              "ItemId": "SC4304AF001",
+              "Name": "BLADE ROW 4 MACHINED",
+              "Description": null,
+              "Revision": "2.0",
+              "ObjectType": "AENMBOMPRevision",
+              "Attributes": [],
+              "CreatedDate": "2017-10-06T13:48:57",
+              "LastModifiedDate": "2021-03-30T14:51:28",
+              "Status": null
+            },
+            "ChildComponents": [
+              {
+                "Id": null,
+                "Quantity": 1.0,
+                "Component": {
+                  "Id": "xJUlwOr3hnO_QC",
+                  "ItemId": "SC4404AF001",
+                  "Name": "BLADE ROW 4 COARSE FORGED",
+                  "Description": null,
+                  "Revision": "0.0",
+                  "ObjectType": "AENMBOMPRevision",
+                  "Attributes": [],
+                  "CreatedDate": "2017-05-04T14:35:09",
+                  "LastModifiedDate": "2020-07-30T16:45:31",
+                  "Status": null
+                },
+                "ChildComponents": [
+                  {
+                    "Id": null,
+                    "Quantity": 1.0,
+                    "Component": {
+                      "Id": "BEfdl292hnO_QC",
+                      "ItemId": "ATC1231020M0001",
+                      "Name": "X4CRNICUMO14-5, BLADE FG",
+                      "Description": null,
+                      "Revision": "0.0",
+                      "ObjectType": "AENMBOMPRevision",
+                      "Attributes": [],
+                      "CreatedDate": "2016-06-10T15:33:55",
+                      "LastModifiedDate": "2020-07-23T14:30:14",
+                      "Status": null
+                    },
+                    "ChildComponents": [],
+                    "Level": 4,
+                    "MaxDepth": 0
+                  }
+                ],
+                "Level": 3,
+                "MaxDepth": 1
+              }
+            ],
+            "Level": 2,
+            "MaxDepth": 2
+          }
+        ],
+        "Level": 1,
+        "MaxDepth": 3
+      },
+      {
+        "Id": null,
+        "Quantity": 44.0,
+        "Component": {
+          "Id": "h1TpQblJhnO_QC",
+          "ItemId": "SC8304AF001",
+          "Name": "BLADE 4 STANDARD LOCK 1",
+          "Description": null,
+          "Revision": "0.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2017-11-16T10:16:46",
+          "LastModifiedDate": "2020-10-13T15:16:43",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 44.0,
+        "Component": {
+          "Id": "SqhZogCuhnO_QC",
+          "ItemId": "SC8304AF002",
+          "Name": "BLADE 4 STANDARD LOCK 2",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-07-01T10:19:43",
+          "LastModifiedDate": "2024-08-27T13:59:11",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 1.0,
+        "Component": {
+          "Id": "wuQpQblJhnO_QC",
+          "ItemId": "SC8304AF003",
+          "Name": "BLADE 4 LOCKING PIECE 1",
+          "Description": null,
+          "Revision": "0.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2017-11-16T10:16:19",
+          "LastModifiedDate": "2020-10-13T15:54:33",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 1.0,
+        "Component": {
+          "Id": "CLhZogCuhnO_QC",
+          "ItemId": "SC8304AF004",
+          "Name": "BLADE 4 LOCKING PIECE 2",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-07-01T10:19:50",
+          "LastModifiedDate": "2024-07-09T15:31:20",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 1.0,
+        "Component": {
+          "Id": "hFQpQblJhnO_QC",
+          "ItemId": "SC8304AF005",
+          "Name": "BLADE 4 LOCKING KEY",
+          "Description": null,
+          "Revision": "0.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2017-11-16T10:16:41",
+          "LastModifiedDate": "2020-10-13T15:44:47",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "zbidQSrGhnO_QC",
+          "ItemId": "SC9304AF200",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-1",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:50",
+          "LastModifiedDate": "2024-10-11T16:29:12",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "jendQSrGhnO_QC",
+          "ItemId": "SC9304AF201",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-2",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:38",
+          "LastModifiedDate": "2024-10-11T16:29:11",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "zWmdQSrGhnO_QC",
+          "ItemId": "SC9304AF202",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-3",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:40",
+          "LastModifiedDate": "2024-10-11T16:29:11",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "zYndQSrGhnO_QC",
+          "ItemId": "SC9304AF203",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-4",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:22",
+          "LastModifiedDate": "2024-10-11T16:29:08",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "TmodQSrGhnO_QC",
+          "ItemId": "SC9304AF204",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-5",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:36",
+          "LastModifiedDate": "2024-10-11T16:29:10",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "UUgdQSrGhnO_QC",
+          "ItemId": "SC9304AF205",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-6",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:54",
+          "LastModifiedDate": "2024-10-11T16:29:07",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 45.0,
+        "Component": {
+          "Id": "jpgdQSrGhnO_QC",
+          "ItemId": "SC9304AF206",
+          "Name": "LOCKING SHOE FOR SPRINGS ROW 4-7",
+          "Description": null,
+          "Revision": "1.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2024-10-11T16:01:29",
+          "LastModifiedDate": "2024-10-11T16:29:05",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      },
+      {
+        "Id": null,
+        "Quantity": 180.0,
+        "Component": {
+          "Id": "01YheDn_hnO_QC",
+          "ItemId": "HTGD353196P0003",
+          "Name": "SPRING",
+          "Description": null,
+          "Revision": "3.0",
+          "ObjectType": "AENMBOMPRevision",
+          "Attributes": [],
+          "CreatedDate": "2017-04-11T16:46:30",
+          "LastModifiedDate": "2020-12-04T13:55:20",
+          "Status": null
+        },
+        "ChildComponents": [],
+        "Level": 1,
+        "MaxDepth": 0
+      }
+    ],
+    "Level": 0,
+    "MaxDepth": 4
+  },
+  "Forms": [
+    {
+      "Id": "CHvRJrcyhnO_QC",
+      "ItemId": null,
+      "Name": "SC4004AF002-ADiv",
+      "Description": null,
+      "Revision": null,
+      "ObjectType": "AEN4ADivDataForm",
+      "Attributes": [
+        {
+          "InternalName": "aen4DesignModule",
+          "DisplayName": "Design Module",
+          "AttributeType": "String",
+          "Value": ""
+        },
+        {
+          "InternalName": "aen4ProductLine",
+          "DisplayName": "Product Line",
+          "AttributeType": "String",
+          "Value": "AES Gas Turbine"
+        }
+      ],
+      "CreatedDate": "2023-06-28T22:02:24",
+      "LastModifiedDate": "2023-07-21T07:46:01",
+      "Status": null
+    },
+    {
+      "Id": "CPkRJrcyhnO_QC",
+      "ItemId": null,
+      "Name": "ENGLISH",
+      "Description": null,
+      "Revision": null,
+      "ObjectType": "AEN4LangDescForm",
+      "Attributes": [],
+      "CreatedDate": "2023-06-28T22:02:24",
+      "LastModifiedDate": "2023-07-10T14:04:53",
+      "Status": null
+    },
+    {
+      "Id": "CTnRJrcyhnO_QC",
+      "ItemId": null,
+      "Name": "ITALIAN",
+      "Description": null,
+      "Revision": null,
+      "ObjectType": "AEN4LangDescForm",
+      "Attributes": [],
+      "CreatedDate": "2023-06-28T22:02:24",
+      "LastModifiedDate": "2023-07-10T14:04:53",
+      "Status": null
+    }
+  ],
+  "WhereUsed": [
+    {
+      "Id": "iYuRHyS5hnO_QC",
+      "ItemId": "SC0000AF005",
+      "Name": "COMPRESSOR BLADING ROTOR BLADE 1-15",
+      "Description": null,
+      "Revision": "0.0",
+      "ObjectType": "AENMBOMPRevision",
+      "Attributes": [],
+      "CreatedDate": "2023-06-01T16:12:29",
+      "LastModifiedDate": "2023-06-13T15:22:42",
+      "Status": null
+    },
+    {
+      "Id": "igtRXvJChnO_QC",
+      "ItemId": "SC0000AF004",
+      "Name": "COMPRESSOR BLADING ROTOR BLADE 1-15",
+      "Description": null,
+      "Revision": "0.0",
+      "ObjectType": "AENMBOMPRevision",
+      "Attributes": [],
+      "CreatedDate": "2023-06-05T10:51:16",
+      "LastModifiedDate": "2023-06-13T15:22:43",
+      "Status": null
+    }
+  ],
+  "Documents": []
+}

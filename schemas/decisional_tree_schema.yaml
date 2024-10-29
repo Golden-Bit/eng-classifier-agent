@@ -1,0 +1,92 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Schema Dettagliato per Componenti GT"
+description: "Schema dettagliato che definisce la struttura dei dati JSON dei componenti GT, inclusi attributi, valori opzionali e regole di validazione."
+type: "object"
+properties:
+  ClassId:
+    type: "string"
+    description: "Identificatore della classe del componente."
+  Name:
+    type: "string"
+    description: "Nome del componente."
+  Description:
+    type: "string"
+    description: "Descrizione dettagliata del componente."
+  Rules:
+    type: "string"
+    description: "Regole per l'attribuzione di valori e validazione per il componente."
+  ParentId:
+    type: ["string", "null"]
+    description: "Identificatore del componente padre, se presente."
+  ParentClassId:
+    type: ["string", "null"]
+    description: "Identificatore della classe del componente padre, se presente."
+  ParentName:
+    type: ["string", "null"]
+    description: "Nome del componente padre, se presente."
+  Level:
+    type: "integer"
+    description: "Livello del componente nella struttura gerarchica."
+  Attributes:
+    type: "array"
+    description: "Elenco degli attributi personalizzati associati al componente."
+    items:
+      $ref: "#/definitions/Attribute"
+  EntryRule:
+    type: "string"
+    description: "Regola di ingresso per la validazione dell'oggetto."
+  AttributeValuationRule:
+    type: "array"
+    description: "Regole per la valutazione dei valori degli attributi."
+    items:
+      type: "string"
+  childRef:
+    type: "array"
+    description: "Riferimenti ai componenti figli."
+    items:
+      type: "string"
+required:
+  - ClassId
+  - Name
+  - Attributes
+
+definitions:
+  Attribute:
+    type: "object"
+    description: "Rappresenta un attributo di un componente, incluso nome, id e valori opzionali."
+    properties:
+      Id:
+        type: "string"
+        description: "Identificatore univoco dell'attributo."
+      AttributeId:
+        type: "string"
+        description: "ID dell'attributo."
+      Name:
+        type: "string"
+        description: "Nome dell'attributo."
+      KeyLovId:
+        type: "string"
+        description: "Identificatore dell'elenco di valori opzionali associati."
+      OptionValues:
+        type: "array"
+        description: "Elenco di valori opzionali per l'attributo."
+        items:
+          $ref: "#/definitions/OptionValue"
+    required:
+      - Id
+      - AttributeId
+      - Name
+
+  OptionValue:
+    type: "object"
+    description: "Valore opzionale disponibile per un attributo specifico."
+    properties:
+      Key:
+        type: "string"
+        description: "Chiave del valore opzionale."
+      Value:
+        type: "string"
+        description: "Valore corrispondente alla chiave."
+    required:
+      - Key
+      - Value
