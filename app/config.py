@@ -8,7 +8,7 @@ chatbot_config = dict()
 
 chatbot_config["page_title"] = "Virtual Assistant For Technical Support"
 chatbot_config["page_icon"] = ("https://raw.githubusercontent.com/Golden-Bit/minimal-chat-bot-ui/main/resources/robot_chat_icon.PNG")
-chatbot_config["ai_avatar_url"] = ("https://raw.githubusercontent.com/Golden-Bit/minimal-chat-bot-ui/main/resources/robot_chat_icon.PNG")
+chatbot_config["ai_avatar_url"] = ("https://static.wixstatic.com/media/63b1fb_d435afe21e2c47f8b9831c70f3c84c16~mv2.png")
 chatbot_config["user_avatar_url"] = ("https://raw.githubusercontent.com/Golden-Bit/minimal-chat-bot-ui/main/resources/user_chat_icon.png")
 
 #chatbot_config["image_1"] = "https://static.wixstatic.com/shapes/63b1fb_3ac1a3cb810046d1aed14ff69e132b51.svg"
