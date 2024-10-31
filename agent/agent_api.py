@@ -16,11 +16,18 @@ from agent_getter import get_chain
 
 router = APIRouter()
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+openai_api_key = os.getenv('OPENAI_API_KEY')
+
 llm = ChatOpenAI(
     model_name="gpt-4o",
     temperature=0,
     streaming=True,
-    #api_key="sk-..."
+    api_key=openai_api_key
 )
 
 
