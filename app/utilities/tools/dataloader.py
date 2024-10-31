@@ -161,30 +161,30 @@ class DocumentToolKitManager:
                 description="Usa questo strumento per leggere e processare un documento locale (file PDF o di testo). Richiede il percorso del file.",
                 args_schema=ReadLocalDocumentModel
             ),
-            #StructuredTool(
-            #    name="create_local_document",
-            #    func=self.create_local_document,
-            #    description="Usa questo strumento per creare un documento locale con il contenuto fornito. Richiede il percorso del file e il contenuto.",
-            #    args_schema=CreateLocalDocumentModel
-            #),
-            #StructuredTool(
-            #    name="delete_local_document",
-            #    func=self.delete_local_document,
-            #    description="Usa questo strumento per eliminare un documento locale. Richiede il percorso del file.",
-            #    args_schema=DeleteLocalDocumentModel
-            #),
-            #StructuredTool(
-            #    name="modify_local_document",
-            ##    func=self.modify_local_document,
-            #    description="Usa questo strumento per modificare un documento locale con nuovo contenuto. Richiede il percorso del file e il nuovo contenuto.",
-            #    args_schema=ModifyLocalDocumentModel
-            #),
-            #StructuredTool(
-            #    name="read_web_page",
-            #    func=self.read_web_page,
-            #    description="Usa questo strumento per leggere e processare il contenuto di una pagina web. Richiede l'URL.",
-            #    args_schema=ReadWebPageModel
-            #)
+            StructuredTool(
+                name="create_local_document",
+                func=self.create_local_document,
+                description="Usa questo strumento per creare un documento locale con il contenuto fornito. Richiede il percorso del file e il contenuto.",
+                args_schema=CreateLocalDocumentModel
+            ),
+            StructuredTool(
+                name="delete_local_document",
+                func=self.delete_local_document,
+                description="Usa questo strumento per eliminare un documento locale. Richiede il percorso del file.",
+                args_schema=DeleteLocalDocumentModel
+            ),
+            StructuredTool(
+                name="modify_local_document",
+                func=self.modify_local_document,
+                description="Usa questo strumento per modificare un documento locale con nuovo contenuto. Richiede il percorso del file e il nuovo contenuto.",
+                args_schema=ModifyLocalDocumentModel
+            ),
+            StructuredTool(
+                name="read_web_page",
+                func=self.read_web_page,
+                description="Usa questo strumento per leggere e processare il contenuto di una pagina web. Richiede l'URL.",
+                args_schema=ReadWebPageModel
+            )
         ]
 
 

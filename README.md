@@ -2,51 +2,46 @@
 
 ## Indice
 
-1. [Introduzione](#1-introduzione)
-2. [Obiettivi del Progetto](#2-obiettivi-del-progetto)
-3. [Architettura del Sistema](#3-architettura-del-sistema)
-    - [3.1. Componenti Principali](#31-componenti-principali)
-    - [3.2. Flusso di Lavoro Generale](#32-flusso-di-lavoro-generale)
-4. [Implementazione Pratica](#4-implementazione-pratica)
-    - [4.1. Prerequisiti](#41-prerequisiti)
-    - [4.2. Configurazione del Progetto](#42-configurazione-del-progetto)
-    - [4.3. Configurazione di MongoDB](#43-configurazione-di-mongodb)
-    - [4.4. Avvio del Backend (API)](#44-avvio-del-backend-api)
-    - [4.5. Configurazione e Avvio dell'Agente](#45-configurazione-e-avvio-dellagente)
-    - [4.6. Avvio dell'Interfaccia Utente (UI) con Streamlit](#46-avvio-dellinterfaccia-utente-ui-con-streamlit)
-    - [4.7. Utilizzo](#47-utilizzo)
-5. [Strutture Dati](#5-strutture-dati)
-    - [5.1. Schema JSON degli Item](#51-schema-json-degli-item)
-    - [5.2. Schema dei Nodi dell'Albero Decisionale](#52-schema-dei-nodi-dellalbero-decisionale)
-6. [Utilizzo degli Strumenti di Interazione con MongoDB](#6-utilizzo-degli-strumenti-di-interazione-con-mongodb)
-    - [6.1. `write_to_mongo`](#61-writetomongo)
-    - [6.2. `read_from_mongo`](#62-readfrommongo)
-    - [6.3. `delete_from_mongo`](#63-deletefrommongo)
-    - [6.4. `update_in_mongo`](#64-updateinmongo)
-7. [Esecuzione delle Regole e Output JSON](#7-esecuzione-delle-regole-e-output-json)
-    - [7.1. Formato dell'Output JSON](#71-formato-delloutput-json)
-    - [7.2. Applicazione delle Regole tramite LLM](#72-applicazione-delle-regole-tramite-llm)
-    - [7.3. Navigazione nell'Albero Decisionale](#73-navigazione-nellalbero-decisionale)
-8. [Output Attesi](#8-output-attesi)
-    - [8.1. Risultato della Classificazione](#81-risultato-della-classificazione)
-    - [8.2. Giustificazione delle Scelte](#82-giustificazione-delle-scelte)
-9. [Troubleshooting](#9-troubleshooting)
-10. [Conclusione](#10-conclusione)
-11. [Prossimi Passi](#11-prossimi-passi)
+1. **Introduzione**
+2. **Obiettivi del Progetto**
+3. **Architettura del Sistema**
+   - 3.1. Componenti Principali
+   - 3.2. Flusso di Lavoro Generale
+4. **Design dell'Agente**
+   - 4.1. Integrazione con LLM tramite LangChain
+   - 4.2. Capacità Multi-Strumento
+   - 4.3. Applicazione delle Regole e Output Strutturato
+   - 4.4. Navigazione tra i Nodi dell'Albero Decisionale
+   - 4.5. Descrizione Dettagliata della Logica (Pseudocodice)
+5. **Strutture Dati**
+   - 5.1. Schema JSON degli Item
+   - 5.2. Schema dei Nodi dell'Albero Decisionale
+6. **Esecuzione delle Regole e Output JSON**
+   - 6.1. Formato dell'Output JSON
+   - 6.2. Applicazione Iniziale tramite Agente LLM
+   - 6.3. Valutazione per Algoritmi Esperti
+7. **Strumenti dell'Agente**
+   - 7.1. Navigazione Efficiente dei Campi JSON
+   - 7.2. Esecuzione di Codice Python
+   - 7.3. Manipolazione e Visualizzazione di File
+8. **Output Attesi**
+   - 8.1. Risultato della Classificazione
+   - 8.2. Giustificazione delle Scelte
+9. **Conclusione**
 
 ---
 
 ## 1. Introduzione
 
-Questo documento descrive l'implementazione pratica di un sistema basato su Large Language Model (LLM) utilizzando LangChain. Il sistema prevede un agente multi-strumento in grado di classificare oggetti denominati *item* secondo uno schema di regole applicate a un albero decisionale. Gli *item* seguono uno schema JSON dettagliato, e l'agente naviga tra i nodi dell'albero, applicando le regole di classificazione e restituendo sia il risultato che una giustificazione delle scelte effettuate. I dati sono gestiti tramite un database MongoDB, e l'interfaccia utente è realizzata con Streamlit.
+Questo documento descrive il progetto per la progettazione logica, in Python, di un sistema basato su Large Language Model (LLM) utilizzando LangChain. Il sistema prevede un agente multi-strumento in grado di classificare oggetti denominati *item* (elementi e componenti) secondo uno schema di regole applicate a un albero decisionale. Gli *item* seguono uno schema JSON dettagliato, e l'agente deve navigare tra i nodi dell'albero, applicando le regole di classificazione e restituendo sia il risultato che una giustificazione delle scelte effettuate. Inoltre, l'LLM applicato sui nodi deve restituire un output in JSON strutturato dopo aver applicato le regole, dove un campo dell'output contiene l'esito True/False e un altro campo contiene la giustificazione, note aggiuntive, ecc.
 
 ## 2. Obiettivi del Progetto
 
-- **Sviluppare un agente intelligente** capace di classificare gli *item* secondo regole definite.
+- **Sviluppare un agente intelligente** capace di classificare gli *item* secondo le regole definite.
 - **Integrare un LLM tramite LangChain** per l'applicazione iniziale delle regole, con output strutturato in JSON.
 - **Permettere l'espansione futura** verso l'uso di algoritmi esperti per l'esecuzione delle regole.
 - **Fornire strumenti all'agente** per navigare efficientemente nei campi JSON, eseguire codice Python e manipolare file.
-- **Garantire un output dettagliato**, includendo sia la classificazione risultante che la giustificazione delle decisioni prese, in formato JSON strutturato.
+- **Garantire un output dettagliato**, includendo sia la classificazione risultante che la giustificazione delle decisioni prese, in un formato JSON strutturato.
 
 ## 3. Architettura del Sistema
 
@@ -55,153 +50,219 @@ Questo documento descrive l'implementazione pratica di un sistema basato su Larg
 - **Agente LLM Multi-Strumento**: Il cuore del sistema, responsabile dell'elaborazione e della classificazione degli *item*.
 - **Interfaccia LangChain**: Utilizzata per interagire con il modello LLM e orchestrare le operazioni dell'agente.
 - **Albero Decisionale**: Struttura che definisce i nodi, le regole e le relazioni per la classificazione.
-- **Database degli Item (MongoDB)**: Collezione di *item* da classificare, conformi allo schema JSON fornito.
-- **Backend API (FastAPI)**: Gestisce le richieste di classificazione e interagisce con l'agente.
-- **Interfaccia Utente (Streamlit)**: Frontend per interagire con l'agente, inviare *item* e visualizzare i risultati.
+- **Database degli Item**: Collezione di *item* da classificare, conformi allo schema JSON fornito.
 
 ### 3.2. Flusso di Lavoro Generale
 
-1. **Input dell'Item**: L'utente fornisce un *item* tramite l'interfaccia Streamlit.
-2. **Salvataggio dell'Item**: L'item viene salvato nella collezione `items` di MongoDB utilizzando lo strumento `write_to_mongo`.
-3. **Invio alla API**: L'interfaccia Streamlit invia una richiesta di classificazione alla API FastAPI.
-4. **Classificazione tramite Agente**:
-    - L'agente carica l'albero decisionale dalla collezione `decisional_tree_v2`.
-    - Naviga attraverso i nodi dell'albero applicando le regole.
-    - Utilizza LLM per applicare le regole e genera un output JSON strutturato.
-5. **Salvataggio dei Risultati**: I risultati della classificazione vengono salvati nella collezione `classification_results_{ID}`.
-6. **Visualizzazione dei Risultati**: L'interfaccia Streamlit visualizza i risultati e le giustificazioni all'utente.
+1. **Input dell'Item**: L'agente riceve un *item* da classificare.
+2. **Inizializzazione**: L'agente carica l'albero decisionale e le regole associate.
+3. **Navigazione dell'Albero**: L'agente inizia dal nodo radice e naviga tra i nodi applicando le regole.
+4. **Applicazione delle Regole con Output JSON**: Le regole di ciascun nodo vengono applicate utilizzando l'LLM, che restituisce un output in JSON strutturato.
+5. **Determinazione della Classificazione**: L'agente analizza gli output JSON per decidere il percorso nell'albero decisionale e, infine, la classificazione dell'*item*.
+6. **Generazione dell'Output**: L'agente restituisce la classificazione e una giustificazione dettagliata delle scelte effettuate, in un formato JSON strutturato.
 
-## 4. Implementazione Pratica
+## 4. Design dell'Agente
 
-### 4.1. Prerequisiti
+### 4.1. Integrazione con LLM tramite LangChain
 
-- **Ambiente Python**: Versione 3.8 o superiore.
-- **MongoDB**: Installato e in esecuzione.
-- **FastAPI**: Framework per la creazione del backend API.
-- **Streamlit**: Framework per la creazione dell'interfaccia utente.
-- **LangChain**: Libreria per l'integrazione con LLM.
-- **Altri pacchetti Python**: Vedi `requirements.txt`.
+L'agente utilizzerà LangChain per interfacciarsi con un modello LLM (ad esempio, GPT-4). Questo permetterà di:
 
-### 4.2. Configurazione del Progetto
+- **Interpretare e applicare le regole** in linguaggio naturale.
+- **Restituire output strutturato in JSON** con esiti delle regole, giustificazioni e note aggiuntive.
+- **Gestire interazioni complesse** con i dati degli *item*.
+- **Fornire spiegazioni dettagliate** sulle decisioni prese.
 
-1. **Clonare il Repository**
+### 4.2. Capacità Multi-Strumento
 
-    ```bash
-    git clone https://github.com/tuo-username/tuo-progetto.git
-    cd tuo-progetto
-    ```
+Per eseguire le operazioni richieste, l'agente avrà accesso a diversi strumenti:
 
-2. **Creare e Attivare un Ambiente Virtuale**
+- **Navigazione JSON**: Per esplorare e analizzare i dati degli *item*.
+- **Esecuzione di Codice Python**: Per operazioni computazionali o manipolazioni avanzate.
+- **Manipolazione e Visualizzazione di File**: Per gestire documenti associati agli *item*.
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # Su Windows: venv\Scripts\activate
-    ```
+### 4.3. Applicazione delle Regole e Output Strutturato
 
-3. **Installare le Dipendenze**
+Le regole di classificazione saranno applicate in due fasi:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+1. **Applicazione Iniziale tramite LLM con Output JSON**: L'agente utilizza l'LLM per interpretare e applicare le regole in modo flessibile, ottenendo un output strutturato in JSON che include l'esito (True/False), la giustificazione e note aggiuntive.
+2. **Valutazione per Algoritmi Esperti**: In base ai risultati, si potrà decidere di implementare alcune regole tramite algoritmi esperti per maggiore efficienza, mantenendo l'output coerente in formato JSON.
 
-4. **Configurare le Variabili d'Ambiente**
+### 4.4. Navigazione tra i Nodi dell'Albero Decisionale
 
-    Crea un file `.env` nella radice del progetto e aggiungi le seguenti variabili:
+L'agente dovrà:
 
-    ```env
-    API_KEY=tuo_api_key_openai
-    API_ADDRESS=http://127.0.0.1:8100
-    ```
+- **Iniziare dal nodo radice** dell'albero decisionale.
+- **Applicare le regole del nodo corrente** e analizzare l'output JSON per determinare il percorso successivo.
+- **Navigare tra i nodi figli** basandosi sull'esito (True/False) delle regole applicate.
+- **Ripetere il processo** fino a raggiungere un nodo foglia (classificazione finale).
 
-### 4.3. Configurazione di MongoDB
+### 4.5. Descrizione Dettagliata della Logica (Pseudocodice)
 
-1. **Avviare MongoDB**
+#### Inizializzazione
 
-    Assicurati che MongoDB sia in esecuzione. Puoi avviarlo tramite:
+```pseudo
+function main():
+    # Carica l'albero decisionale
+    decision_tree = load_decision_tree()
 
-    ```bash
-    mongod --dbpath /percorso/al/tuo/db
-    ```
+    # Carica l'item da classificare
+    item = load_item()
 
-2. **Creare il Database e le Collezioni**
+    # Inizia la classificazione dalla radice dell'albero
+    classification_result = classify_item(item, decision_tree.root)
 
-    Puoi utilizzare la shell `mongo` o un client come MongoDB Compass per creare il database `item_classification_db` e le collezioni `items` e `decisional_tree_v2`.
+    # Genera l'output con la giustificazione
+    generate_output(classification_result)
+```
 
-### 4.4. Avvio del Backend (API)
+#### Funzione di Classificazione Ricorsiva
 
-1. **Navigare nella Cartella del Backend**
+```pseudo
+function classify_item(item, current_node):
+    # Inizializza la giustificazione per il nodo corrente
+    justification = {}
 
-    ```bash
-    cd backend
-    ```
+    # Applicazione della EntryRule del nodo corrente tramite LLM
+    if current_node.EntryRule is not None:
+        entry_rule_output = apply_rule_with_llm(item, current_node.EntryRule)
+        justification['EntryRule'] = entry_rule_output
 
-2. **Avviare il Server FastAPI**
+        if not entry_rule_output['Result']:
+            # Se la EntryRule non è soddisfatta, termina la navigazione
+            return {
+                'ClassId': current_node.ClassId,
+                'Justification': justification
+            }
 
-    ```bash
-    uvicorn agent_api:app --host 0.0.0.0 --port 8100
-    ```
+    # Applicazione delle AttributeValuationRule
+    for rule in current_node.AttributeValuationRule:
+        rule_output = apply_rule_with_llm(item, rule)
+        justification[rule] = rule_output
 
-    Il server sarà accessibile all'indirizzo `http://127.0.0.1:8100`.
+    # Se il nodo ha figli, naviga tra essi
+    if current_node.childRef is not None and len(current_node.childRef) > 0:
+        for child_class_id in current_node.childRef:
+            child_node = find_node_by_class_id(decision_tree, child_class_id)
+            # Chiamata ricorsiva alla funzione di classificazione sul nodo figlio
+            child_result = classify_item(item, child_node)
+            if child_result is not None:
+                # Aggrega le giustificazioni
+                justification.update(child_result['Justification'])
+                return {
+                    'ClassId': child_result['ClassId'],
+                    'Justification': justification
+                }
+    else:
+        # Nodo foglia raggiunto
+        return {
+            'ClassId': current_node.ClassId,
+            'Justification': justification
+        }
 
-### 4.5. Configurazione e Avvio dell'Agente
+    # Se nessun percorso è valido, ritorna None
+    return None
+```
 
-1. **Navigare nella Cartella dell'Agente**
+#### Applicazione delle Regole con Output JSON
 
-    ```bash
-    cd agent
-    ```
+```pseudo
+function apply_rule_with_llm(item, rule):
+    # Crea il prompt per l'LLM
+    prompt = create_prompt_for_rule(item, rule)
+    response = llm_call(prompt)
 
-2. **Verificare e Configurare lo Script `agent_getter.py`**
+    # L'LLM restituisce un output JSON strutturato
+    rule_output = parse_llm_json_response(response)
 
-    Assicurati che il file `agent_getter.py` sia configurato correttamente con le informazioni necessarie per connettersi a MongoDB e all'LLM. Verifica che l'URL di MongoDB e le credenziali dell'API OpenAI siano corretti.
+    return rule_output
+```
 
-3. **Avviare l'Agente**
+#### Formato dell'Output JSON dell'LLM
 
-    ```bash
-    python agent_getter.py
-    ```
+L'LLM deve restituire un output JSON con il seguente formato:
 
-    Questo script inizializza l'agente con i tool necessari per interagire con MongoDB e l'LLM.
+```json
+{
+  "Result": true,
+  "Justification": "La giustificazione dettagliata della decisione.",
+  "Notes": "Eventuali note aggiuntive o osservazioni."
+}
+```
 
-### 4.6. Avvio dell'Interfaccia Utente (UI) con Streamlit
+#### Creazione del Prompt per l'LLM
 
-1. **Navigare nella Cartella della UI**
+```pseudo
+function create_prompt_for_rule(item, rule):
+    # Estrarre le informazioni necessarie dall'item
+    relevant_data = extract_relevant_data(item, rule)
 
-    ```bash
-    cd ui
-    ```
+    # Creare il prompt in linguaggio naturale con istruzioni per l'output JSON
+    prompt = f"""
+    Data l'item con le seguenti caratteristiche:
+    {relevant_data}
+    Applica la seguente regola:
+    {rule}
+    Fornisci il risultato in formato JSON con i seguenti campi:
+    - "Result": true o false
+    - "Justification": spiegazione della decisione
+    - "Notes": eventuali note aggiuntive
+    """
+    return prompt
+```
 
-2. **Avviare l'Applicazione Streamlit**
+#### Chiamata al LLM
 
-    ```bash
-    streamlit run main.py
-    ```
+```pseudo
+function llm_call(prompt):
+    # Utilizza LangChain per interfacciarsi con l'LLM
+    response = langchain_interface.generate_response(prompt)
+    return response
+```
 
-    L'interfaccia utente sarà accessibile all'indirizzo indicato nel terminale, solitamente `http://localhost:8501`.
+#### Analisi della Risposta del LLM
 
-### 4.7. Utilizzo
+```pseudo
+function parse_llm_json_response(response):
+    try:
+        # Parsifica la risposta JSON dell'LLM
+        rule_output = json.loads(response)
+    except JSONDecodeError:
+        # Gestisce errori di parsing
+        rule_output = {
+            "Result": false,
+            "Justification": "Errore nel parsing della risposta dell'LLM.",
+            "Notes": response
+        }
+    return rule_output
+```
 
-Una volta avviati tutti i componenti, segui questi passaggi per utilizzare il sistema:
+#### Funzioni di Supporto
 
-1. **Aprire l'Interfaccia Utente**
+```pseudo
+function extract_relevant_data(item, rule):
+    # Naviga nei campi JSON dell'item per estrarre i dati rilevanti
+    data = {}
+    # Implementa la logica per estrarre gli attributi necessari
+    return data
 
-    Apri il tuo browser e naviga all'indirizzo `http://localhost:8501` per accedere all'interfaccia Streamlit.
+function find_node_by_class_id(decision_tree, class_id):
+    # Ricerca il nodo nell'albero decisionale con il ClassId specificato
+    return node
+```
 
-2. **Inserire un Item da Classificare**
+#### Generazione dell'Output
 
-    - Nella casella di input della chat, inserisci i dettagli dell'*item* che desideri classificare.
-    - Premi invio per inviare l'item all'agente.
-
-3. **Visualizzare i Risultati della Classificazione**
-
-    - L'agente elaborerà l'*item* applicando le regole definite nell'albero decisionale.
-    - I risultati della classificazione, insieme alle giustificazioni, saranno visualizzati nell'interfaccia utente.
-    - I risultati saranno anche salvati nella collezione `classification_results_{ID}` di MongoDB per futura consultazione.
-
-4. **Monitorare lo Stato del Sistema**
-
-    - Puoi monitorare i log del backend API e dell'agente per verificare il corretto funzionamento e diagnosticare eventuali problemi.
-    - Assicurati che tutti i servizi siano in esecuzione senza errori.
+```pseudo
+function generate_output(classification_result):
+    # Crea un report con la classificazione finale e le giustificazioni
+    output = {
+        'ClassId': classification_result['ClassId'],
+        'ClassificationPath': get_classification_path(classification_result),
+        'Justification': classification_result['Justification']
+    }
+    # Visualizza o salva l'output
+    display_output(output)
+```
 
 ## 5. Strutture Dati
 
@@ -209,43 +270,13 @@ Una volta avviati tutti i componenti, segui questi passaggi per utilizzare il si
 
 Gli *item* seguono uno schema JSON dettagliato, che include:
 
-- **Proprietà principali**: `Id`, `ItemId`, `Name`, `Description`, `Revision`, `ObjectType`, `Attributes`, `CreatedDate`, `LastModifiedDate`, `Status`.
+- **Proprietà principali**: Id, ItemId, Name, Description, Revision, ObjectType, ecc.
 - **Attributi personalizzati**: Una lista di attributi definiti dall'utente.
-- **Relazioni**: `BOM`, `Forms`, `WhereUsed`, `Documents`.
-
-#### Esempio di Item
-
-```json
-{
-  "Item": {
-    "Id": "12345",
-    "ItemId": "A1B2C3",
-    "Name": "Modulo Esempio",
-    "Description": "Descrizione dettagliata del modulo.",
-    "Revision": "1.0",
-    "ObjectType": "TypeA",
-    "Attributes": [
-      {
-        "InternalName": "color",
-        "DisplayName": "Colore",
-        "AttributeType": "String",
-        "Value": "Rosso"
-      }
-    ],
-    "CreatedDate": "2024-04-27T12:34:56Z",
-    "LastModifiedDate": "2024-04-28T12:34:56Z",
-    "Status": "active"
-  },
-  "BOM": { /* Dettagli della Distinta Base */ },
-  "Forms": [ /* Elenco dei moduli associati */ ],
-  "WhereUsed": [ /* Elenco degli articoli in cui l'item è utilizzato */ ],
-  "Documents": [ /* Elenco dei documenti associati */ ]
-}
-```
+- **Relazioni**: BOM, Forms, WhereUsed, Documents.
 
 ### 5.2. Schema dei Nodi dell'Albero Decisionale
 
-Ogni nodo dell'albero decisionale ha la seguente struttura:
+Ogni nodo dell'albero ha la seguente struttura:
 
 - **ClassId**: Identificatore unico della classe.
 - **Name**: Nome della classe.
@@ -258,285 +289,68 @@ Ogni nodo dell'albero decisionale ha la seguente struttura:
 - **AttributeValuationRule**: Regole per la valutazione degli attributi.
 - **childRef**: Riferimenti ai nodi figli.
 
-#### Esempio di Nodo dell'Albero Decisionale
+## 6. Esecuzione delle Regole e Output JSON
 
-```json
-{
-  "ClassId": "MGT0101",
-  "Name": "Modulo di Design",
-  "Description": "Classe per i moduli di design",
-  "Rules": "Regole specifiche per la classe di design",
-  "ParentId": null,
-  "ParentClassId": null,
-  "ParentName": null,
-  "Level": 1,
-  "Attributes": [
-    {
-      "Id": "attr1",
-      "AttributeId": "color",
-      "Name": "Color",
-      "KeyLovId": "lov1",
-      "OptionValues": [
-        { "Key": "red", "Value": "Rosso" },
-        { "Key": "blue", "Value": "Blu" }
-      ]
-    }
-  ],
-  "EntryRule": "La sottostringa dall'ItemId deve essere '90960'",
-  "AttributeValuationRule": [
-    "color == 'red'",
-    "size > 10"
-  ],
-  "childRef": ["MGT0102", "MGT0103"]
-}
-```
-
-## 6. Utilizzo degli Strumenti di Interazione con MongoDB
-
-Nel backend, sono definiti i seguenti strumenti per interagire con il database MongoDB. Questi strumenti sono strutturati utilizzando `StructuredTool` di LangChain e possono essere utilizzati per eseguire operazioni CRUD (Create, Read, Update, Delete).
-
-### 6.1. `write_to_mongo`
-
-- **Descrizione**: Inserisce dati nella collection specificata o in quella di default.
-- **Parametri Richiesti**:
-  - `database_name`: Nome del database.
-  - `collection_name`: Nome della collection.
-  - `data`: Stringa JSON dei dati da inserire.
-
-#### Esempio di Utilizzo
-
-```plaintext
-Utilizza lo strumento `write_to_mongo` con i seguenti parametri:
-- database_name: "item_classification_db"
-- collection_name: "items"
-- data: {
-    "Item": {
-        "Id": "12345",
-        "ItemId": "A1B2C3",
-        "Name": "Modulo Esempio",
-        "Description": "Descrizione dettagliata del modulo.",
-        "Revision": "1.0",
-        "ObjectType": "TypeA",
-        "Attributes": [
-            {
-                "InternalName": "color",
-                "DisplayName": "Colore",
-                "AttributeType": "String",
-                "Value": "Rosso"
-            }
-        ],
-        "CreatedDate": "2024-04-27T12:34:56Z",
-        "LastModifiedDate": "2024-04-28T12:34:56Z",
-        "Status": "active"
-    },
-    "BOM": { /* Dettagli della Distinta Base */ },
-    "Forms": [ /* Elenco dei moduli associati */ ],
-    "WhereUsed": [ /* Elenco degli articoli in cui l'item è utilizzato */ ],
-    "Documents": [ /* Elenco dei documenti associati */ ]
-}
-```
-
-### 6.2. `read_from_mongo`
-
-- **Descrizione**: Legge dati dalla collection specificata o da quella di default.
-- **Parametri Richiesti**:
-  - `database_name`: Nome del database.
-  - `collection_name`: Nome della collection.
-  - `query`: Query per il recupero dei dati.
-  - `output_format`: Formato dell'output (`"string"` o `"object"`).
-
-#### Esempio di Utilizzo
-
-```plaintext
-Utilizza lo strumento `read_from_mongo` con i seguenti parametri:
-- database_name: "item_classification_db"
-- collection_name: "decisional_tree_v2"
-- query: { "ParentId": null }
-- output_format: "object"
-```
-
-### 6.3. `delete_from_mongo`
-
-- **Descrizione**: Elimina dati dalla collection specificata o da quella di default.
-- **Parametri Richiesti**:
-  - `database_name`: Nome del database.
-  - `collection_name`: Nome della collection.
-  - `query`: Query per eliminare i dati.
-
-#### Esempio di Utilizzo
-
-```plaintext
-Utilizza lo strumento `delete_from_mongo` con i seguenti parametri:
-- database_name: "item_classification_db"
-- collection_name: "items"
-- query: { "ItemId": "A1B2C3" }
-```
-
-### 6.4. `update_in_mongo`
-
-- **Descrizione**: Aggiorna dati nella collection specificata o da quella di default.
-- **Parametri Richiesti**:
-  - `database_name`: Nome del database.
-  - `collection_name`: Nome della collection.
-  - `query`: Query per aggiornare i dati.
-  - `new_values`: Nuovi valori per l'aggiornamento.
-
-#### Esempio di Utilizzo
-
-```plaintext
-Utilizza lo strumento `update_in_mongo` con i seguenti parametri:
-- database_name: "item_classification_db"
-- collection_name: "items"
-- query: { "ItemId": "A1B2C3" }
-- new_values: {
-    "Status": "inactive",
-    "LastModifiedDate": "2024-05-01T12:00:00Z"
-}
-```
-
-## 7. Esecuzione delle Regole e Output JSON
-
-### 7.1. Formato dell'Output JSON
+### 6.1. Formato dell'Output JSON
 
 L'LLM deve restituire un output JSON strutturato per ogni regola applicata, con i seguenti campi:
 
-- **Result**: Booleano (`True`/`False`) che indica se la regola è soddisfatta.
+- **Result**: Booleano (True/False) che indica se la regola è soddisfatta.
 - **Justification**: Stringa che fornisce una spiegazione dettagliata della decisione.
 - **Notes**: Eventuali note aggiuntive o osservazioni.
 
-#### Esempio di Output JSON
+### 6.2. Applicazione Iniziale tramite Agente LLM
 
-```json
-{
-  "Result": true,
-  "Justification": "La sottostringa dell'ItemId corrisponde a '90960'.",
-  "Notes": "Verificato secondo la regola di ingresso."
-}
+- **Interpretazione delle Regole**: L'agente utilizza l'LLM per comprendere le regole scritte in linguaggio naturale.
+- **Applicazione ai Dati dell'Item**: Le regole vengono applicate ai dati specifici dell'*item* attraverso i prompt generati.
+- **Analisi dell'Output JSON**: L'agente analizza l'output JSON dell'LLM per determinare l'esito della regola e le giustificazioni.
+
+### 6.3. Valutazione per Algoritmi Esperti
+
+- **Identificazione di Regole Complesse**: Alcune regole potrebbero richiedere un'elaborazione più efficiente o precisa.
+- **Implementazione di Algoritmi**: Sviluppare funzioni specifiche per queste regole, mantenendo l'output coerente in formato JSON.
+- **Integrazione nel Flusso**: Gli algoritmi vengono utilizzati in sostituzione o in supporto all'LLM.
+
+## 7. Strumenti dell'Agente
+
+### 7.1. Navigazione Efficiente dei Campi JSON
+
+- **Parsing Avanzato**: Utilizzo di librerie come `json` o `pydantic` per gestire gli *item*.
+- **Ricerca e Filtraggio**: Funzionalità per cercare rapidamente attributi e valori specifici.
+
+```pseudo
+function get_attribute_value(item, attribute_name):
+    for attribute in item.Attributes:
+        if attribute.Name == attribute_name:
+            return attribute.Value
+    return None
 ```
 
-### 7.2. Applicazione delle Regole tramite LLM
+### 7.2. Esecuzione di Codice Python
 
-L'agente utilizza LangChain per interfacciarsi con il modello LLM (ad esempio, GPT-4). Questo permette di:
+- **Interpreter Integrato**: L'agente può eseguire codice Python per calcoli o manipolazioni.
 
-- **Interpretare e applicare le regole** in linguaggio naturale.
-- **Restituire output strutturato in JSON** con esiti delle regole, giustificazioni e note aggiuntive.
-- **Gestire interazioni complesse** con i dati degli *item*.
-- **Fornire spiegazioni dettagliate** sulle decisioni prese.
+```pseudo
+function execute_python_code(code_snippet, context):
+    # Esegue il codice in un ambiente sicuro
+    result = safe_exec(code_snippet, context)
+    return result
+```
 
-#### Passaggi per Applicare una Regola
+- **Sicurezza**: Limitare l'esecuzione a codice sicuro per evitare rischi.
 
-1. **Creazione del Prompt per l'LLM**
+### 7.3. Manipolazione e Visualizzazione di File
 
-    ```python
-    def create_prompt_for_rule(item, rule):
-        relevant_data = extract_relevant_data(item, rule)
-        prompt = f"""
-        Data l'item con le seguenti caratteristiche:
-        {json.dumps(relevant_data, indent=2)}
-        Applica la seguente regola:
-        {rule}
-        Fornisci il risultato in formato JSON con i seguenti campi:
-        - "Result": true o false
-        - "Justification": spiegazione della decisione
-        - "Notes": eventuali note aggiuntive
-        """
-        return prompt
-    ```
+- **Gestione di Documenti**: Apertura e lettura di file associati agli *item* (es. documenti di validazione).
 
-2. **Chiamata al LLM e Parsing della Risposta**
+```pseudo
+function read_associated_documents(item):
+    for document in item.Documents:
+        content = read_file(document.file_path)
+        # Processa il contenuto se necessario
+```
 
-    ```python
-    def apply_rule_with_llm(item, rule):
-        prompt = create_prompt_for_rule(item, rule)
-        response = llm.generate_response(prompt)
-        try:
-            rule_output = json.loads(response)
-        except json.JSONDecodeError:
-            rule_output = {
-                "Result": False,
-                "Justification": "Errore nel parsing della risposta dell'LLM.",
-                "Notes": response
-            }
-        return rule_output
-    ```
-
-### 7.3. Navigazione nell'Albero Decisionale
-
-L'agente naviga attraverso l'albero decisionale applicando le regole ai nodi. Ecco come funziona:
-
-1. **Inizializzazione**
-
-    ```python
-    def main():
-        # Carica l'albero decisionale
-        decision_tree = read_from_mongo(
-            database_name="item_classification_db",
-            collection_name="decisional_tree_v2",
-            query={"ParentId": None},
-            output_format="object"
-        )
-        # Carica l'item da classificare
-        item = read_from_mongo(
-            database_name="item_classification_db",
-            collection_name="items",
-            query={"ItemId": "A1B2C3"},
-            output_format="object"
-        )
-        # Inizia la classificazione dalla radice dell'albero
-        classification_result = classify_item(item, decision_tree[0])
-        # Salva e visualizza il risultato
-        write_to_mongo(
-            database_name="item_classification_db",
-            collection_name=f"classification_results_{classification_result['ID']}",
-            data=classification_result
-        )
-    ```
-
-2. **Funzione di Classificazione Ricorsiva**
-
-    ```python
-    def classify_item(item, current_node):
-        justification = {}
-        if current_node.get("EntryRule"):
-            entry_rule_output = apply_rule_with_llm(item, current_node["EntryRule"])
-            justification['EntryRule'] = entry_rule_output
-            if not entry_rule_output["Result"]:
-                return {
-                    'ClassId': current_node['ClassId'],
-                    'Justification': justification
-                }
-        
-        for rule in current_node.get("AttributeValuationRule", []):
-            rule_output = apply_rule_with_llm(item, rule)
-            justification[rule] = rule_output
-        
-        if current_node.get("childRef"):
-            for child_class_id in current_node["childRef"]:
-                child_node = find_node_by_class_id(decision_tree, child_class_id)
-                child_result = classify_item(item, child_node)
-                if child_result:
-                    justification.update(child_result["Justification"])
-                    return {
-                        'ClassId': child_result['ClassId'],
-                        'Justification': justification
-                    }
-        else:
-            return {
-                'ClassId': current_node['ClassId'],
-                'Justification': justification
-            }
-        return None
-    ```
-
-3. **Funzione di Ricerca del Nodo per `ClassId`**
-
-    ```python
-    def find_node_by_class_id(decision_tree, class_id):
-        for node in decision_tree:
-            if node['ClassId'] == class_id:
-                return node
-        return None
-    ```
+- **Visualizzazione**: Presentazione dei contenuti rilevanti all'interno del processo decisionale.
 
 ## 8. Output Attesi
 
@@ -551,228 +365,14 @@ L'agente naviga attraverso l'albero decisionale applicando le regole ai nodi. Ec
 - **Valori degli Attributi Considerati**: Quali attributi hanno determinato il percorso decisionale.
 - **Eventuali Anomalie o Eccezioni**: Segnalazione di dati mancanti o incoerenti.
 
-#### Esempio di Output JSON Finale
+## 9. Conclusione
 
-```json
-{
-  "ClassId": "MGT0103",
-  "ClassificationPath": ["MGT0101", "MGT0102", "MGT0103"],
-  "Justifications": {
-    "EntryRule": {
-      "Result": true,
-      "Justification": "La sottostringa dell'ItemId corrisponde a '90960'.",
-      "Notes": "Verificato secondo la regola di ingresso."
-    },
-    "color == 'red'": {
-      "Result": true,
-      "Justification": "Il colore dell'item è rosso.",
-      "Notes": "Conformità alla regola di colore."
-    },
-    "size > 10": {
-      "Result": false,
-      "Justification": "La dimensione dell'item è inferiore a 10.",
-      "Notes": "Non soddisfa la regola di dimensione."
-    }
-  },
-  "Timestamp": "2024-04-28T15:00:00Z"
-}
-```
+Questo progetto mira a sviluppare un agente intelligente capace di classificare *item* complessi utilizzando un albero decisionale e un insieme di regole. L'integrazione con un LLM tramite LangChain permette una flessibilità nell'interpretazione delle regole, mentre le capacità multi-strumento garantiscono un'efficiente gestione dei dati e delle operazioni necessarie. L'aggiunta di un output strutturato in JSON dall'LLM migliora l'integrazione dei risultati nel processo decisionale, facilitando l'analisi automatizzata degli esiti delle regole e delle giustificazioni. Il sistema è progettato per essere estensibile, permettendo future integrazioni con algoritmi esperti e ulteriori strumenti.
 
-## 9. Troubleshooting
+---
 
-### Problema: `UnicodeDecodeError` durante lo Streaming
-
-#### Sintomo
-
-Durante lo streaming della risposta dal backend, si verifica un errore di decodifica UTF-8:
-
-```plaintext
-UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc3 in position 0: unexpected end of data
-```
-
-#### Causa
-
-Il byte `0xc3` è un byte iniziale per una sequenza di caratteri UTF-8 che richiede un byte successivo. L'errore si verifica quando il chunk ricevuto è incompleto, rendendo impossibile la decodifica corretta.
-
-#### Soluzione
-
-Modificare il codice di Streamlit per gestire correttamente i byte incompleti, accumulando i chunk fino a ottenere una sequenza UTF-8 completa prima di tentare la decodifica.
-
-#### Passaggi Dettagliati
-
-1. **Aggiungere la Funzione `is_complete_utf8`**
-
-    ```python
-    def is_complete_utf8(data: bytes) -> bool:
-        """Verifica se `data` rappresenta una sequenza UTF-8 completa."""
-        try:
-            data.decode("utf-8")
-            return True
-        except UnicodeDecodeError:
-            return False
-    ```
-
-2. **Aggiornare la Funzione `main` per Gestire i Chunk Incompleti**
-
-    ```python
-    def main():
-        for message in st.session_state.messages:
-            if message["role"] == "user":
-                with st.chat_message(message["role"], avatar=st.session_state.user_avatar_url):
-                    st.markdown(message["content"])
-            else:
-                with st.chat_message(message["role"], avatar=st.session_state.ai_avatar_url):
-                    st.markdown(message["content"])
-
-        if prompt := st.chat_input("Say something"):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-
-            if len(st.session_state.messages) > 10:
-                st.session_state.messages = st.session_state.messages[-10:]
-
-            with st.chat_message("user", avatar=st.session_state.user_avatar_url):
-                st.markdown(prompt)
-
-            with st.chat_message("assistant", avatar=st.session_state.ai_avatar_url):
-                message_placeholder = st.empty()
-                s = requests.Session()
-                full_response = ""
-                url = f"{api_address}/agent/stream_events_chain"
-                payload = {
-                    "chain_id": "agent_with_tools_gpt-4",
-                    "query": {
-                        "input": prompt,
-                        "chat_history": st.session_state.messages
-                    },
-                    "inference_kwargs": {},
-                }
-
-                non_decoded_chunk = b''
-                with s.post(url, json=payload, headers=None, stream=True) as resp:
-                    for chunk in resp.iter_content():
-                        print(chunk)
-                        if chunk:
-                            non_decoded_chunk += chunk
-                            if is_complete_utf8(non_decoded_chunk):
-                                decoded_chunk = non_decoded_chunk.decode("utf-8")
-                                full_response += decoded_chunk
-                                message_placeholder.markdown(full_response + "▌", unsafe_allow_html=True)
-                                non_decoded_chunk = b''  # Svuota il buffer
-                message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-    ```
-
-3. **Esempio Completo del File della UI (`main.py`)**
-
-    ```python
-    import json
-    from typing import Any
-    import requests
-    import streamlit as st
-    import copy
-    from config import chatbot_config
-
-    ########################################################################################################################
-
-    api_address = chatbot_config["api_address"]
-
-    ########################################################################################################################
-
-    st.set_page_config(page_title=chatbot_config["page_title"],
-                       page_icon=chatbot_config["page_icon"],
-                       layout="wide",
-                       initial_sidebar_state="auto",
-                       menu_items=None)
-
-    if "messages" not in st.session_state:
-        st.session_state.messages = copy.deepcopy(chatbot_config["messages"])
-
-    if "ai_avatar_url" not in st.session_state:
-        st.session_state.ai_avatar_url = chatbot_config["ai_avatar_url"]
-
-    if "user_avatar_url" not in st.session_state:
-        st.session_state.user_avatar_url = chatbot_config["user_avatar_url"]
-
-    ########################################################################################################################
-
-    def is_complete_utf8(data: bytes) -> bool:
-        """Verifica se `data` rappresenta una sequenza UTF-8 completa."""
-        try:
-            data.decode("utf-8")
-            return True
-        except UnicodeDecodeError:
-            return False
-
-    def main():
-        for message in st.session_state.messages:
-            if message["role"] == "user":
-                with st.chat_message(message["role"], avatar=st.session_state.user_avatar_url):
-                    st.markdown(message["content"])
-            else:
-                with st.chat_message(message["role"], avatar=st.session_state.ai_avatar_url):
-                    st.markdown(message["content"])
-
-        if prompt := st.chat_input("Say something"):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-
-            #####################################################################
-            if len(st.session_state.messages) > 10:
-                st.session_state.messages = st.session_state.messages[-10:]
-            #####################################################################
-
-            with st.chat_message("user", avatar=st.session_state.user_avatar_url):
-                st.markdown(prompt)
-
-            with st.chat_message("assistant", avatar=st.session_state.ai_avatar_url):
-                message_placeholder = st.empty()
-                s = requests.Session()
-                full_response = ""
-                url = f"{api_address}/agent/stream_events_chain"
-                payload = {
-                    "chain_id": "agent_with_tools_gpt-4",
-                    "query": {
-                        "input": prompt,
-                        "chat_history": st.session_state.messages
-                    },
-                    "inference_kwargs": {},
-                }
-
-                non_decoded_chunk = b''
-                with s.post(url, json=payload, headers=None, stream=True) as resp:
-                    for chunk in resp.iter_content():
-                        print(chunk)
-                        if chunk:
-                            # Aggiungi il chunk alla sequenza da decodificare
-                            non_decoded_chunk += chunk
-
-                            # Decodifica solo quando i byte formano una sequenza UTF-8 completa
-                            if is_complete_utf8(non_decoded_chunk):
-                                decoded_chunk = non_decoded_chunk.decode("utf-8")
-                                full_response += decoded_chunk
-                                message_placeholder.markdown(full_response + "▌", unsafe_allow_html=True)
-                                non_decoded_chunk = b''  # Svuota il buffer
-
-                message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-
-    ########################################################################################################################
-
-    main()
-    ```
-
-## 10. Conclusione
-
-Questo progetto ha sviluppato un agente intelligente capace di classificare *item* complessi utilizzando un albero decisionale e un insieme di regole. L'integrazione con un LLM tramite LangChain permette una flessibilità nell'interpretazione delle regole, mentre le capacità multi-strumento garantiscono un'efficiente gestione dei dati e delle operazioni necessarie. L'aggiunta di un output strutturato in JSON dall'LLM migliora l'integrazione dei risultati nel processo decisionale, facilitando l'analisi automatizzata degli esiti delle regole e delle giustificazioni. Il sistema è progettato per essere estensibile, permettendo future integrazioni con algoritmi esperti e ulteriori strumenti.
-
-## 11. Prossimi Passi
+**Prossimi Passi**:
 
 - **Definizione Dettagliata delle Regole**: Formalizzare tutte le regole presenti nei nodi dell'albero decisionale, specificando il formato dell'output JSON per ciascuna.
 - **Sviluppo del Prototipo**: Implementare una versione iniziale dell'agente per testare il flusso di lavoro e la gestione degli output JSON.
 - **Validazione e Test**: Utilizzare dati reali per verificare l'efficacia del sistema, analizzando gli output JSON per migliorare l'accuratezza e l'efficienza.
-- **Miglioramento dell'Interfaccia Utente**: Aggiungere funzionalità avanzate all'interfaccia Streamlit per una migliore esperienza utente.
-- **Monitoraggio delle Prestazioni**: Implementare strumenti di logging e monitoraggio per analizzare le prestazioni del sistema in tempo reale.
-- **Sicurezza e Gestione delle Chiavi**: Implementare misure di sicurezza per proteggere le chiavi API e garantire l'accesso sicuro al database.
-
----
-
-**Nota**: Assicurati di mantenere aggiornati i file di configurazione e di seguire le best practice per la gestione delle dipendenze e della sicurezza. Questo garantisce l'integrità e la scalabilità del sistema man mano che il progetto si evolve.

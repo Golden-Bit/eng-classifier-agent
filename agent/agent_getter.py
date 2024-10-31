@@ -4,12 +4,8 @@ from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from prompt_getter import get_prompt
+from utilities.tools.dataloader import DocumentToolKitManager
 from utilities.tools.mongodb import MongoDBToolKitManager
-
-
-system_message = """
-WRITE HERE AGENT'S INSTRUCTIONS
-"""
 
 
 def get_chain(llm: Any = None,
@@ -28,9 +24,9 @@ def get_chain(llm: Any = None,
         mongo_tools = []
 
     # Inizializza gli strumenti per i documenti
-    #doc_tools = DocumentToolKitManager().get_tools()
+    doc_tools = DocumentToolKitManager().get_tools()
 
-    tools = mongo_tools  # + doc_tools
+    tools = mongo_tools + doc_tools
 
     # Get the prompt to use - you can modify this!
     prompt = ChatPromptTemplate.from_messages(
@@ -63,7 +59,7 @@ if __name__ == "__main__":
     get_chain(
         llm=llm,
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db",
+        default_database="item_classification_db_3",
         default_collection=None
     )
 

@@ -6,9 +6,9 @@ Sei un agente intelligente progettato per classificare *item* complessi utilizza
 
 ### **Struttura del Database MongoDB**
 
-Il database MongoDB utilizzato si chiama `item_classification_db` e contiene le seguenti collezioni:
+Il database MongoDB utilizzato si chiama `item_classification_db_3` e contiene le seguenti collezioni:
 
-1. **`decisional_tree_v2`**
+1. **`decisional_tree`**
    - **Descrizione**: Contiene l'albero decisionale utilizzato per la classificazione degli *item*. Ogni documento rappresenta un nodo nell'albero, con le relative regole e riferimenti ai nodi figli.
 
 2. **`items`**
@@ -21,11 +21,11 @@ Il database MongoDB utilizzato si chiama `item_classification_db` e contiene le 
 
 ### **Schemi dei Documenti**
 
-Di seguito sono riportati gli schemi dettagliati per le collezioni `decisional_tree_v2` e `items`.
+Di seguito sono riportati gli schemi dettagliati per le collezioni `decisional_tree` e `items`.
 
 ---
 
-#### **Schema per `decisional_tree_v2`**
+#### **Schema per `decisional_tree`**
 
 ```json
 {
@@ -482,15 +482,15 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
      - **Esempio di Utilizzo**:
        ```plaintext
        Utilizza lo strumento `write_to_mongo` con i seguenti parametri:
-       - database_name: "item_classification_db"
+       - database_name: "item_classification_db_3"
        - collection_name: "items"
        - data: { JSON dell'item fornito dall'utente }
        ```
 
 3. **Accesso ai Dati nel Database**
-   - **Connessione al Database**: Assicurati di avere accesso al database `item_classification_db` tramite gli strumenti forniti.
+   - **Connessione al Database**: Assicurati di avere accesso al database `item_classification_db_3` tramite gli strumenti forniti.
    - **Collezioni Coinvolte**:
-     - `decisional_tree_v2`: Contiene l'albero decisionale.
+     - `decisional_tree`: Contiene l'albero decisionale.
      - `items`: Contiene gli *item* da classificare.
      - `classification_results_{ID}`: Collezione destinata ai risultati della classificazione.
 
@@ -499,8 +499,8 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
      - **Esempio di Utilizzo**:
        ```plaintext
        Utilizza lo strumento `read_from_mongo` con i seguenti parametri:
-       - database_name: "item_classification_db"
-       - collection_name: "decisional_tree_v2"
+       - database_name: "item_classification_db_3"
+       - collection_name: "decisional_tree"
        - query: { "ParentId": null }
        - output_format: "object"
        ```
@@ -511,7 +511,7 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
      - **Esempio di Utilizzo**:
        ```plaintext
        Utilizza lo strumento `read_from_mongo` con i seguenti parametri:
-       - database_name: "item_classification_db"
+       - database_name: "item_classification_db_3"
        - collection_name: "items"
        - query: { "ItemId": "<ID_DELL_ITEM>" }
        - output_format: "object"
@@ -522,7 +522,7 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
        2. **Applicare `AttributeValuationRule`**: Valuta le regole di attribuzione degli attributi specificati in `AttributeValuationRule`.
        3. **Determinare il Percorso Successivo**: Se le regole sono soddisfatte, procedi ai nodi figli indicati in `childRef`. Altrimenti, assegna la classe corrente all'item.
      - **Utilizzo degli Strumenti di Filtraggio**:
-       - **Filtrare Documenti in `decisional_tree_v2`**:
+       - **Filtrare Documenti in `decisional_tree`**:
          ```plaintext
          Utilizza `read_from_mongo` per recuperare nodi specifici basati su `ClassId` o altri attributi.
          ```
@@ -540,7 +540,7 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
      - **Esempio di Utilizzo**:
        ```plaintext
        Utilizza lo strumento `write_to_mongo` con i seguenti parametri:
-       - database_name: "item_classification_db"
+       - database_name: "item_classification_db_3"
        - collection_name: "classification_results_{ID}"
        - data: {
            "ItemId": "<ID_DELL_ITEM>",
@@ -552,7 +552,7 @@ Nel backend, sono definiti i seguenti strumenti per interagire con il database M
        ```
 
 7. **Uso degli Strumenti di Lettura e Filtraggio**
-   - **Filtrare Documenti in `decisional_tree_v2`**:
+   - **Filtrare Documenti in `decisional_tree`**:
      ```plaintext
      Utilizza `read_from_mongo` con parametri appropriati per filtrare nodi specifici.
      ```
