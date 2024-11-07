@@ -29,7 +29,6 @@ if "ai_avatar_url" not in st.session_state:
 if "user_avatar_url" not in st.session_state:
     st.session_state.user_avatar_url = chatbot_config["user_avatar_url"]
 
-
 ########################################################################################################################
 
 def is_complete_utf8(data: bytes) -> bool:
@@ -39,7 +38,6 @@ def is_complete_utf8(data: bytes) -> bool:
         return True
     except UnicodeDecodeError:
         return False
-
 
 def process_documents(item):
     """
@@ -75,6 +73,43 @@ def process_documents(item):
                         file['ContentBase64'] = None
     return item
 
+def process_bom(item):
+    """
+    Processa la BOM dell'item per sostituirla con informazioni generali.
+    """
+    if 'BOM' in item and item['BOM']:
+        bom = item['BOM']
+        # Calcola informazioni generali sulla BOM
+        max_depth = calculate_max_depth(bom)
+        total_components = count_total_components(bom)
+        # Crea un nuovo dizionario con le informazioni generali
+        bom_summary = {
+            'MaxDepth': max_depth,
+            'TotalComponents': total_components
+        }
+        # Sostituisci la BOM originale con il sommario
+        item['BOM'] = bom_summary
+    return item
+
+def calculate_max_depth(bom_component, current_depth=1):
+    """
+    Calcola la profondità massima della BOM ricorsivamente.
+    """
+    if 'ChildComponents' in bom_component and bom_component['ChildComponents']:
+        depths = [calculate_max_depth(child, current_depth + 1) for child in bom_component['ChildComponents']]
+        return max(depths)
+    else:
+        return current_depth
+
+def count_total_components(bom_component):
+    """
+    Conta il numero totale di componenti nella BOM ricorsivamente.
+    """
+    total = 1  # Conta il componente corrente
+    if 'ChildComponents' in bom_component and bom_component['ChildComponents']:
+        for child in bom_component['ChildComponents']:
+            total += count_total_components(child)
+    return total
 
 def upload_in_mongo(file_content: str, collection_name: str):
     """Carica il contenuto JSON nel MongoDB nella collezione specificata."""
@@ -87,18 +122,20 @@ def upload_in_mongo(file_content: str, collection_name: str):
     # Converti la stringa JSON in un oggetto JSON valido
     data = json.loads(file_content)
 
-    # Se stiamo caricando items, processa i documenti
+    # Se stiamo caricando items, processa i documenti e la BOM
     if collection_name == "items":
         if isinstance(data, list):
             # Se è una lista di items
             processed_items = []
             for item in data:
                 processed_item = process_documents(item)
+                processed_item = process_bom(processed_item)
                 processed_items.append(processed_item)
             data = processed_items
         else:
             # Singolo item
             data = process_documents(data)
+            data = process_bom(data)
 
     # Converti di nuovo a stringa JSON per l'inserimento
     dumped_data = json.dumps(data)
@@ -109,6 +146,21 @@ def upload_in_mongo(file_content: str, collection_name: str):
         data=dumped_data,
     )
 
+def delete_all_documents(collection_name: str):
+    """Elimina tutti i documenti dalla collezione specificata nel database 'item_classification_db_3'."""
+    mongodb_toolkit = MongoDBToolKitManager(
+        connection_string="mongodb://localhost:27017",
+        default_database="item_classification_db_3",
+        default_collection=collection_name,
+    )
+
+    # Usa una query vuota per eliminare tutti i documenti
+    mongodb_toolkit.delete_from_mongo(
+        database_name="item_classification_db_3",
+        collection_name=collection_name,
+        query="{}"
+    )
+    st.sidebar.success(f"Tutti gli elementi nella collezione '{collection_name}' sono stati eliminati.")
 
 def main():
     # Sidebar per il caricamento dei file
@@ -129,6 +181,14 @@ def main():
 
         if decisional_tree_file is None and items_file is None:
             st.sidebar.warning("Per favore, carica almeno un file prima di cliccare su 'Carica su MongoDB'.")
+
+    # Pulsanti per pulire le collezioni
+    st.sidebar.title("Gestione Database")
+    if st.sidebar.button("Pulisci Decisional Tree"):
+        delete_all_documents("decisional_tree")
+
+    if st.sidebar.button("Pulisci Items"):
+        delete_all_documents("items")
 
     # Interfaccia principale della chat
     for message in st.session_state.messages:
@@ -180,7 +240,6 @@ def main():
 
             message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
 
 ########################################################################################################################
 

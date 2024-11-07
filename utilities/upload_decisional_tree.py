@@ -38,6 +38,18 @@ def upload_in_mongo(file_path: str):
     #print(json.dumps(json.loads(loaded_data), indent=4))
 
 
-if __name__ == "__main__":
+def delete_all_items():
+    """Elimina tutti i documenti dalla collezione 'items' nel database 'item_classification_db_3'."""
+    mongodb_toolkit = MongoDBToolKitManager(
+        connection_string="mongodb://localhost:27017",
+        default_database="item_classification_db_3",
+        default_collection="decisional_tree",
+    )
 
-    upload_in_mongo(file_path="C:\\Users\\Golden Bit\\Desktop\\tmp\\input_data\\decisional_tree.json")
+    # Usa una query vuota per eliminare tutti i documenti
+    mongodb_toolkit.delete_from_mongo(
+        database_name="item_classification_db_3",
+        collection_name="decisional_tree",
+        query="{}"
+    )
+    print("Tutti gli elementi nella collezione 'items' sono stati eliminati.")

@@ -21,7 +21,7 @@ import os
 
 load_dotenv()
 
-openai_api_key = os.getenv('OPENAI_API_KEY')
+openai_api_key = "..." #os.getenv('OPENAI_API_KEY')
 
 llm = ChatOpenAI(
     model_name="gpt-4o",
@@ -35,7 +35,6 @@ class ExecuteChainRequest(BaseModel):
     chain_id: str = Field(..., example="example_chain", title="Chain ID", description="The unique ID of the chain to execute.")
     query: Dict[str, Any] = Field(..., example={"input": "What is my name?", "chat_history": [["user", "hello, my name is mario!"], ["assistant", "hello, how are you mario?"]]}, title="Query", description="The input query for the chain.")
     inference_kwargs: Dict[str, Any] = Field(..., example={}, description="")
-
 
 
 @router.post("/stream_events_chain")
