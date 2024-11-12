@@ -88,6 +88,12 @@ class MongoDBToolKitManager:
         result = collection.delete_one(json.loads(query))
         return f"Documents deleted: {result.deleted_count}"
 
+    def delete_all_from_mongo(self, database_name: str, collection_name: str, query: Any):
+        """Elimina documenti dalla collection specificata o da quella di default."""
+        collection = self._get_collection(database_name=database_name, collection_name=collection_name)
+        result = collection.delete_many(json.loads(query))
+        return f"Documents deleted: {result.deleted_count}"
+
     def update_in_mongo(self, database_name: str, collection_name: str, query: Any, new_values: str):
         """Aggiorna documenti nella collection specificata o in quella di default."""
         collection = self._get_collection(database_name=database_name, collection_name=collection_name)
