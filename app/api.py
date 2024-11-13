@@ -242,16 +242,16 @@ def upload_in_mongo(file_content: str, collection_name: str):
             #print(data)
             for item in data:
                 #print(item)
-                #processed_item = {"Item": process_documents(item["Item"])}
+                processed_item = process_documents(item)
                 #print(processed_item)
                 #processed_item = {"Item": process_bom(processed_item["Item"])}
-                processed_item = item
+                #processed_item = item
                 processed_items.append(processed_item)
             data = processed_items
-            print(data[0])
-            print(list(data[0].keys()))
-            print(data[0]["Documents"])
-            del data[0]["Documents"]
+            #print(data[0])
+            #print(list(data[0].keys()))
+            #print(data[0]["Documents"])
+            #del data[0]["Documents"]
             print(data[0])
         #else:
         #    # Singolo item
