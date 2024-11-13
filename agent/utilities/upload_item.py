@@ -14,13 +14,13 @@ def upload_in_mongo(file_path: str):
     )
 
     mongodb_toolkit.write_to_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name="items",
         data=dumped_decisional_tree,
     )
 
     loaded_data = mongodb_toolkit.read_from_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name="items",
         query="{}",
         output_format="object"

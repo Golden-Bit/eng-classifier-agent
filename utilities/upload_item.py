@@ -14,13 +14,13 @@ def upload_in_mongo(file_path: str):
     )
 
     mongodb_toolkit.write_to_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name="items",
         data=dumped_decisional_tree,
     )
 
     loaded_data = mongodb_toolkit.read_from_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name="items",
         query="{}",
         output_format="object"
@@ -37,16 +37,16 @@ def upload_in_mongo(file_path: str):
     # print(json.dumps(json.loads(loaded_data), indent=4))
 
 def delete_all_items():
-    """Elimina tutti i documenti dalla collezione 'items' nel database 'item_classification_db_3'."""
+    """Elimina tutti i documenti dalla collezione 'items' nel database 'item_classification_db_4'."""
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="items",
     )
 
     # Usa una query vuota per eliminare tutti i documenti
     mongodb_toolkit.delete_from_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name="items",
         query="{}"
     )

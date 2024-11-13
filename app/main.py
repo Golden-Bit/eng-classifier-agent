@@ -115,7 +115,7 @@ def upload_in_mongo(file_content: str, collection_name: str):
     """Carica il contenuto JSON nel MongoDB nella collezione specificata."""
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=collection_name,
     )
 
@@ -141,22 +141,22 @@ def upload_in_mongo(file_content: str, collection_name: str):
     dumped_data = json.dumps(data)
 
     mongodb_toolkit.write_to_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name=collection_name,
         data=dumped_data,
     )
 
 def delete_all_documents(collection_name: str):
-    """Elimina tutti i documenti dalla collezione specificata nel database 'item_classification_db_3'."""
+    """Elimina tutti i documenti dalla collezione specificata nel database 'item_classification_db_4'."""
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=collection_name,
     )
 
     # Usa una query vuota per eliminare tutti i documenti
     mongodb_toolkit.delete_from_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name=collection_name,
         query="{}"
     )

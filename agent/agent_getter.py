@@ -59,7 +59,7 @@ if __name__ == "__main__":
     get_chain(
         llm=llm,
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=None
     )
 

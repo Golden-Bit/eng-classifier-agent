@@ -11,6 +11,7 @@ Struttura del modulo:
 - Endpoint per caricare, eliminare e recuperare dati.
 - Endpoint placeholder per la classificazione e l'impostazione di attributi.
 """
+import time
 
 from fastapi import FastAPI, HTTPException, APIRouter, Query
 from pydantic import BaseModel
@@ -22,6 +23,8 @@ from typing import Any
 import requests
 import streamlit as st
 import copy
+
+from app.agent_sdk import execute_agent
 from config import chatbot_config
 from utilities.tools.mongodb import MongoDBToolKitManager
 
@@ -119,9 +122,10 @@ def process_documents(item):
     """
     # Crea la directory 'downloaded_docs' se non esiste
     os.makedirs('downloaded_docs', exist_ok=True)
-
+    print(item)
     if 'Documents' in item and isinstance(item['Documents'], list):
         for document in item['Documents']:
+            print("#")
             if 'AssociatedFiles' in document and isinstance(document['AssociatedFiles'], list):
                 for file in document['AssociatedFiles']:
                     if 'ContentBase64' in file and file['ContentBase64']:
@@ -220,7 +224,7 @@ def upload_in_mongo(file_content: str, collection_name: str):
     """
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=collection_name,
     )
 
@@ -232,28 +236,40 @@ def upload_in_mongo(file_content: str, collection_name: str):
         if isinstance(data, list):
             # Se è una lista di items
             processed_items = []
+            print(data)
+            print(len(data))
+            #del data[0]["Item"]["Documents"]
+            #print(data)
             for item in data:
-                processed_item = process_documents(item)
-                processed_item = process_bom(processed_item)
+                #print(item)
+                #processed_item = {"Item": process_documents(item["Item"])}
+                #print(processed_item)
+                #processed_item = {"Item": process_bom(processed_item["Item"])}
+                processed_item = item
                 processed_items.append(processed_item)
             data = processed_items
-        else:
-            # Singolo item
-            data = process_documents(data)
-            data = process_bom(data)
+            print(data[0])
+            print(list(data[0].keys()))
+            print(data[0]["Documents"])
+            del data[0]["Documents"]
+            print(data[0])
+        #else:
+        #    # Singolo item
+        #    data = process_documents(data)
+        #    data = process_bom(data)
 
     # Converti di nuovo a stringa JSON per l'inserimento
     dumped_data = json.dumps(data)
 
     mongodb_toolkit.write_to_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name=collection_name,
         data=dumped_data,
     )
 
 def delete_all_documents(collection_name: str):
     """
-    Elimina tutti i documenti dalla collezione specificata nel database 'item_classification_db_3'.
+    Elimina tutti i documenti dalla collezione specificata nel database 'item_classification_db_4'.
 
     Parametri:
     - collection_name: Nome della collezione da svuotare.
@@ -264,13 +280,13 @@ def delete_all_documents(collection_name: str):
     """
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=collection_name,
     )
 
     # Usa una query vuota per eliminare tutti i documenti
     mongodb_toolkit.delete_from_mongo(
-        database_name="item_classification_db_3",
+        database_name="item_classification_db_4",
         collection_name=collection_name,
         query="{}"
     )
@@ -320,6 +336,7 @@ async def upload_items(request: ItemsContent):
     items_content = request.data
 
     if items_content:
+        #print(items_content)
         # Elimina i documenti esistenti e carica i nuovi dati
         delete_all_documents("items")
         upload_in_mongo(json.dumps(items_content, indent=2), collection_name="items")
@@ -334,6 +351,8 @@ async def get_collection_contents(
     collection_name: str = Query(..., description="Nome della collezione da recuperare"),
     query: str = Query("{}", description="Filtro opzionale per la query MongoDB come stringa JSON")
 ):
+
+    print(collection_name)
     """
     Recupera il contenuto della collezione specificata, applicando un filtro opzionale.
 
@@ -349,9 +368,9 @@ async def get_collection_contents(
     - HTTPException 500: Se c'è un errore nel recupero dei dati.
     """
     # Valida il nome della collezione
-    allowed_collections = ["decisional_tree", "items"]
-    if collection_name not in allowed_collections:
-        raise HTTPException(status_code=400, detail=f"Collection '{collection_name}' is not allowed.")
+    #allowed_collections = ["decisional_tree", "items"]
+    #if collection_name not in allowed_collections:
+    #    raise HTTPException(status_code=400, detail=f"Collection '{collection_name}' is not allowed.")
 
     try:
         # Parsea la stringa di query in un dizionario
@@ -361,13 +380,13 @@ async def get_collection_contents(
 
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection=collection_name,
     )
 
     try:
         data = mongodb_toolkit.read_from_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name=collection_name,
             query=query,
             output_format="object"
@@ -395,24 +414,58 @@ async def classify_item(request: ClassificationRequest):
     Note:
     - La logica di classificazione è ancora da implementare.
     """
-    # Placeholder logic; la logica reale deve essere implementata
-    return [
-        {
-            "idNodo": "id1",
-            "score": 0.6,
-            "reason": "bla bla bla"
-        },
-        {
-            "idNodo": "id2",
-            "score": 0.3,
-            "reason": "bla bla bla"
-        },
-        {
-            "idNodo": "id3",
-            "score": 0.1,
-            "reason": "bla bla bla"
-        }
-    ]
+
+    node_ids = request.nodiClassificazione
+    item_id = request.idOggetto
+    output_collection_name = f"classification_results_{str(time.time())[-6:].replace('.','')}"
+    history = request.history
+
+    input_query = f"""- Esegui la classificazione dell'item fornito per ognuno dei nodi forniti dai seguenti ids: {node_ids}.
+- Inoltre dovrai applicare tali reogle di classificazione sull'item dato dal seguente id: {item_id} 
+- Salva gli output della classificazione come singoli json per ciascun nodo fornito, dunque salva i risultati di ciascun nodo nella collection {output_collection_name} del mongo db usando strumento di scrittura.
+- salva risultato seguendo il seguente schema di esempio per l'output su ciascun nodo di classificazione : 
+
+```json
+{{
+    "idNodo": "id1",
+    "score": 0.6,
+    "reason": "bla bla bla"
+}}
+```
+
+- dunque dovrai sfruttare tutte le risorse a disposizoine all'occorrenza, usare strumenti opportuni per leggere i contenuto di file che possa dare indicazioni sull'esito delle regole di classificazione.
+- dunque se classifichi N nodi simultaneamente fai in modo tale che la somma degli score sia pari a 1 (lo score va inteso come probaiblità, ossia decimale compreso tra 0 e 1).
+- le probabilità/score devono essere stimate in modo realistico e ragionato.
+- idNodo corrisponde all'id del nodo dell albero decisionale per il quale si mostrano score e reason.
+- la reason deve essere estesa e dettagliata, tale da psiegare i passaggi e i ragionamenti che hanno portato a concludere con un certo score
+- quando salvi output, nel campo di output idNodo devi inserire il valore campo 'ClassId' del nodo in esame e non '_id'.
+- quando filtri in base a 'Id' devi sempre tenere in conto che l'oggetto item è del tipo 
+```json
+    {{
+    "Item": {{
+    "Id": "SquRrOW1hnO_QC",
+    }},
+    .......
+    }}
+```
+- IMPORTANTE: QUANDO DEVI OTTENERE ITEMS NON FILTRARE MAI IN BASE A ID, ANZI USA FILTR  VUOTO {{}} PER OTTENRE TUTTI GLI ITEMS SIMULTANEAMENTE!
+"""
+    chat_history = []
+
+    agent_output = execute_agent(
+        input_query=input_query,
+        chat_history=chat_history
+    )
+
+    classification_results = await get_collection_contents(
+        collection_name=output_collection_name,
+        query="{}"
+    )
+
+    print(classification_results)
+
+    return classification_results
+
 
 # Endpoint per impostare attributi di un item (logica da implementare)
 @router.post("/aieng/classification/item/attributes")
@@ -429,19 +482,60 @@ async def set_attributes(request: SetAttributesRequest):
     Note:
     - La logica per impostare gli attributi è ancora da implementare.
     """
-    # Placeholder logic; la logica reale deve essere implementata
-    return {
+    node_id = request.idNodo
+    item_id = request.idOggetto
+    output_collection_name = f"classification_results_{str(time.time())[-6:].replace('.', '')}"
+    history = request.history
+
+    input_query = f"""- Esegui la valorizzazione degli attributi dell'item fornito per il nodo con id {node_id}.
+    - Inoltre dovrai applicare tali reogle di valorizzazione sull'item dato dal seguente id: {item_id} 
+    - Salva l'output della valorizzazione come json, dunque salva il risultato nella collection {output_collection_name} del mongo db usando strumento di scrittura.
+    - salva risultato seguendo il seguente schema di esempio per l'output: 
+
+    ```json
+    {{
         "attributiValorizzati": [
-            {
+            {{
                 "nomeAttributo": "nome1",
                 "valore": "valore1",
-            },
-            {
+            }},
+            {{
                 "nomeAttributo": "nome2",
                 "valore": "valore2",
-            }
+            }}
         ]
-    }
+    }}
+    ```
+
+    - dunque dovrai sfruttare tutte le risorse a disposizoine all'occorrenza, usare strumenti opportuni per leggere i contenuto di file che possa dare indicazioni sul valore di certi attributi.
+    - assicurati di eseguire la valorizzazione per tutti gli attributi richiesti dal nodo.
+    - quando filtri in base a 'Id' devi sempre tenere in conto che l'oggetto item è del tipo 
+    ```json
+        {{
+        "Item": {{
+        "Id": "SquRrOW1hnO_QC",
+        }},
+        .......
+        }}
+    ```
+    - IMPORTANTE: QUANDO DEVI OTTENERE ITEMS NON FILTRARE MAI IN BASE A ID, ANZI USA FILTRO  VUOTO {{}} PER OTTENRE TUTTI GLI ITEMS SIMULTANEAMENTE!
+    """
+    chat_history = []
+
+    agent_output = execute_agent(
+        input_query=input_query,
+        chat_history=chat_history
+    )
+
+    classification_results = await get_collection_contents(
+        collection_name=output_collection_name,
+        query="{}"
+    )
+
+    print(classification_results)
+
+    return classification_results
+
 
 # Includi il router nell'app FastAPI
 app.include_router(router)

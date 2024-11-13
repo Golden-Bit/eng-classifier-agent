@@ -20,13 +20,13 @@ class UploadItemsRequest(BaseModel):
 def upload_decisional_tree_in_mongo(data: List[Dict[str, Any]]):
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="decisional_tree",
     )
 
     try:
         mongodb_toolkit.write_to_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="decisional_tree",
             data=json.dumps(data, indent=2),  # Pass data as JSON string
         )
@@ -36,13 +36,13 @@ def upload_decisional_tree_in_mongo(data: List[Dict[str, Any]]):
 def delete_all_decisional_tree_items():
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="decisional_tree",
     )
 
     try:
         mongodb_toolkit.delete_all_from_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="decisional_tree",
             query="{}"
         )
@@ -53,13 +53,13 @@ def delete_all_decisional_tree_items():
 def upload_items_in_mongo(data: List[Dict[str, Any]]):
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="items",
     )
 
     try:
         mongodb_toolkit.write_to_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="items",
             data=json.dumps(data, indent=2),  # Pass data as JSON string
         )
@@ -69,13 +69,13 @@ def upload_items_in_mongo(data: List[Dict[str, Any]]):
 def delete_all_items():
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="items",
     )
 
     try:
         mongodb_toolkit.delete_all_from_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="items",
             query="{}"
         )
@@ -108,14 +108,14 @@ async def delete_items():
 async def get_decisional_tree(filter: str = Query("{}", description="Optional MongoDB query filter as JSON string")):
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="decisional_tree",
     )
 
     try:
         query = filter  # Assuming the read_from_mongo function accepts query as a JSON string
         data = mongodb_toolkit.read_from_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="decisional_tree",
             query=query,
             output_format="object"
@@ -131,14 +131,14 @@ async def get_decisional_tree(filter: str = Query("{}", description="Optional Mo
 async def get_items(filter: str = Query("{}", description="Optional MongoDB query filter as JSON string")):
     mongodb_toolkit = MongoDBToolKitManager(
         connection_string="mongodb://localhost:27017",
-        default_database="item_classification_db_3",
+        default_database="item_classification_db_4",
         default_collection="items",
     )
 
     try:
         query = filter  # Assuming the read_from_mongo function accepts query as a JSON string
         data = mongodb_toolkit.read_from_mongo(
-            database_name="item_classification_db_3",
+            database_name="item_classification_db_4",
             collection_name="items",
             query=query,
             output_format="object"
